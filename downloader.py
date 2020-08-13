@@ -1,6 +1,15 @@
 '''
 Date: 10-08-2020
 Author: Pandas ID
+
+Saya sengaja untuk tidak mengencode program yang saya buat,saya ingin
+program ini dipelajari bagi mereka yang mau belajar bukan untuk mereka yang
+cuma tau recode!!
+
+Kalaupun Kalian mau meng upload program ini ke github Anda tolong jangan lupa
+cantumkan github aslinya (guthub saya).
+
+Semoga bermanfaat...
 '''
 
 
