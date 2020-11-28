@@ -6,7 +6,7 @@ Saya sengaja untuk tidak mengencode program yang saya buat,saya ingin
 program ini dipelajari bagi mereka yang mau belajar bukan untuk mereka yang
 cuma tau recode!!
 
-Kalaupun Kalian mau meng upload program ini ke github Anda tolong jangan lupa
+Kalaupun Kalian mau mengupload program ini ke github Anda tolong jangan lupa
 cantumkan github aslinya (guthub saya).
 
 Semoga bermanfaat...
@@ -14,43 +14,88 @@ Semoga bermanfaat...
 
 
 from urllib.parse import unquote
+from bs4 import BeautifulSoup
+from datetime import datetime
 import requests as req
-import time,re,os
+import re,os
 
 
-def download(url, path):
-    CHUNK = 1024
-    content = req.get(url)
-    size = round(int(content.headers.get('Content-Length'))/CHUNK)
-    print(f'\n    -* Ukuran Video: {size} KB')
-    print('    -* Mulai Mendownload....')
-    with open(path, 'wb') as a:
-        for data in content.iter_content(chunk_size=CHUNK):
-            a.write(data)
-    print('    -* Selesai Mendownload....')
+p = '\033[0m'
+m = '\033[91m'
+h = '\033[92m'
+k = '\033[93m'
 
-def parse_url(url):
-    res = req.get(url).text
-    if 'video_redirect' in res:
-        url_video = re.search(r'href\=\"\/video\_redirect\/\?src\=(.*?)\"', res)
-        return unquote(url_video.group(1)).replace(';', '&')
-    else:
-        exit('    -! Video Tidak Ditemukan')
+class Downloader:
+
+    __chunk = 1024
+
+    def __init__(self):
+        self.__url = ''
+        self.__caption = ''
+        self.__video_size = ''
+        self.__video_name = datetime.now().strftime('%m%d%Y%-H%M%S')+'_pandas.mp4'
+
+    def banner(self):
+        os.system('clear')
+        print(f'{h}█▀█ ▄▀█ █▄ █ █▀▄ ▄▀█ █▀'.center(72))
+        print(f'█▀▀ █▀█ █ ▀█ █▄▀ █▀█ ▄█{p}'.center(72))
+        print('-----------------------'.center(68))
+        print(f'{h}[{p}FB Video Downloader{h}]{p}'.center(86))
+        print('-----------------------'.center(68))
+        print()
+
+    # meminta inputan url dari user
+    def setUrl(self):
+        # url = 'https://m.facebook.com/groups/guoblok7/permalink/291796752150964/?app=fbl'
+        # url = 'https://www.facebook.com/groups/710141439552672/permalink/805017850065030/?app=fbl'
+        url = input(f'  >{k} url: {p}');print(p)
+        self.__url = url.replace('www', 'mbasic')
+
+    # mengecek url yang dimasukan user jika benar akan mengembalikan url yang telah di parse
+    def cekUrl(self):
+        response = req.get(self.__url).text
+        if 'video_redirect' in response:
+            print(f'  >{h} video found!')
+            self.getVideoInfo()
+            url_video = re.search(r'href\=\"\/video\_redirect\/\?src\=(.*?)\"', response)
+            self.__url = unquote(url_video.group(1)).replace(';', '&')
+        else:
+            exit(f'  >{m} video not found!')
+
+    def getVideoInfo(self):
+        response = req.get(self.__url)
+
+        # mendapatkan caption dari video
+        meta = BeautifulSoup(response.text, 'html.parser').find('meta', {'name':'description'})
+        try:
+            self.__caption= meta['content']
+        except:
+            pass
+
+    def showVideoInfo(self):
+        print(f'\n{p}  > {k}caption:{p} {self.__caption}\n{p}  >{k} video size:{p} {self.__video_size} KB')
+
+    def download(self):
+        content = req.get(self.__url)
+        # mendapatkan ukuran video
+        size = round(int(content.headers.get('Content-Length'))/self.__chunk)
+        self.__video_size = size
+        self.showVideoInfo()
+        print(f'\n{p}  >{h} Is downloading...')
+        with open('/sdcard/'+self.__video_name, 'wb') as vid:
+            for data in content.iter_content(chunk_size=self.__chunk):
+                vid.write(data)
+        print(f'{p}  >{k} videos saved on directory{h} /sdcard/{self.__video_name}')
+
+    def about(self):
+        print(f'\n\n{p}  > My Contact:\n{h}    https://t.me/PandasID\n{p}  > My Blog:\n{h}    https://pandasid.blogspot.com\n\n')
 
 if __name__ == '__main__':
-    os.system('clear')
-    print('''
-    █▀█ ▄▀█ █▄ █ █▀▄ ▄▀█ █▀
-    █▀▀ █▀█ █ ▀█ █▄▀ █▀█ ▄█
-    -----------------------
-     [FB Video Downloader]
-    -----------------------''')
-    url = parse_url(input('\n    Url Video: ').replace('www', 'mbasic'))
-    path = input('    Simpan Ke: ')
-    if '.mp4' in path:
-        download(url, path)
-    else:
-        print('\n    Contoh:\n    Simpan Ke: /sdcard/video/nama_video.mp4')
-        exit()
-    print('\n    -* Terima Kasih Sudah Menggunakan Tools Kami')
-    print('    -* Silahkan Kunjungi: https://pandasid.blogspot.com Untuk Melihat Tools Kami Yang Lainnya:)')
+    # memuat objek dari class "Downloader"
+    downloader = Downloader()
+
+    downloader.banner()
+    downloader.setUrl()
+    downloader.cekUrl()
+    downloader.download()
+    downloader.about()
