@@ -2,7 +2,7 @@
 Date: 10-08-2020
 Author: Pandas ID
 
-Saya sengaja untuk tidak mengencode program yang saya buat,saya ingin
+Saya sengaja untuk tidak mengencode program yang saya buat, karen saya ingin
 program ini dipelajari bagi mereka yang mau belajar bukan untuk mereka yang
 cuma tau recode!!
 
@@ -17,7 +17,7 @@ from urllib.parse import unquote
 from bs4 import BeautifulSoup
 from datetime import datetime
 import requests as req
-import re,os
+import re,os,time
 
 
 p = '\033[0m'
@@ -81,11 +81,11 @@ class Downloader:
         size = round(int(content.headers.get('Content-Length'))/self.__chunk)
         self.__video_size = size
         self.showVideoInfo()
-        print(f'\n{p}  >{h} Is downloading...')
+        print(f'\n{p}  >{h} Is downloading...', end='', flush=True)
         with open('/sdcard/'+self.__video_name, 'wb') as vid:
             for data in content.iter_content(chunk_size=self.__chunk):
                 vid.write(data)
-        print(f'{p}  >{k} videos saved on directory{h} /sdcard/{self.__video_name}')
+        print(f'\n{p}  >{k} videos saved on directory{h} /sdcard/{self.__video_name}')
 
     def about(self):
         print(f'\n\n{p}  > My Contact:\n{h}    https://t.me/PandasID\n{p}  > My Blog:\n{h}    https://pandasid.blogspot.com\n\n')
