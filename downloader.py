@@ -1,15 +1,6 @@
 '''
 Date: 10-08-2020
 Author: Pandas ID
-
-Saya sengaja untuk tidak mengencode program yang saya buat, karen saya ingin
-program ini dipelajari bagi mereka yang mau belajar bukan untuk mereka yang
-cuma tau recode!!
-
-Kalaupun Kalian mau mengupload program ini ke github Anda tolong jangan lupa
-cantumkan github aslinya (guthub saya).
-
-Semoga bermanfaat...
 '''
 
 
@@ -46,8 +37,6 @@ class Downloader:
 
     # meminta inputan url dari user
     def setUrl(self):
-        # url = 'https://m.facebook.com/groups/guoblok7/permalink/291796752150964/?app=fbl'
-        # url = 'https://www.facebook.com/groups/710141439552672/permalink/805017850065030/?app=fbl'
         url = input(f'  >{k} url: {p}');print(p)
         self.__url = url.replace('www', 'mbasic')
 
